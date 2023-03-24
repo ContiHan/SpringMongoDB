@@ -8,6 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,7 +24,7 @@ public class Application {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository) {
+    CommandLineRunner commandLineRunner(StudentRepository studentRepository, MongoTemplate mongoTemplate) {
         return args -> {
             Student alex = new Student(
                     "Alex",
@@ -38,13 +41,42 @@ public class Application {
                     LocalDateTime.now()
             );
 
-            System.out.println(studentRepository.existsByEmail(alex.getEmail()));
+            studentRepository.findStudentByEmail(alex.getEmail())
+                    .ifPresentOrElse(student -> {
+                        System.out.println(student + " already exists");
+                    }, () -> {
+                        studentRepository.insert(alex);
+                        System.out.println(alex + " was created");
+                    });
 
-            if (studentRepository.existsByEmail(alex.getEmail())) {
-                throw new IllegalStateException("Email already taken");
-            }
-
-            studentRepository.insert(alex);
+//            usingMongoRepositoryAndBoolean(studentRepository, alex);
+//            usingMongoTemplateAndQuery(studentRepository, mongoTemplate, alex);
         };
+    }
+
+    private void usingMongoRepositoryAndBoolean(StudentRepository studentRepository, Student alex) {
+        if (studentRepository.existsByEmail(alex.getEmail())) {
+            throw new IllegalStateException("Email already taken");
+        }
+
+        studentRepository.insert(alex);
+    }
+
+    private void usingMongoTemplateAndQuery(StudentRepository studentRepository, MongoTemplate mongoTemplate, Student alex) {
+        Query query = new Query()
+                .addCriteria(Criteria.where("email").is(alex.getEmail()));
+
+        List<Student> students = mongoTemplate.find(query, Student.class);
+
+        if (students.size() > 1) {
+            throw new IllegalStateException("More than one student with email: " + alex.getEmail());
+        }
+
+        if (students.isEmpty()) {
+            studentRepository.insert(alex);
+            System.out.println("Added new student: " + alex);
+        } else {
+            System.out.println(alex + " already exists");
+        }
     }
 }
