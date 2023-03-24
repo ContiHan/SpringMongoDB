@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,7 +34,7 @@ public class Application {
                     "a.lockwood@gmail.com",
                     Gender.MALE,
                     new Address(
-                        "USA",
+                            "USA",
                             "NY10",
                             "New York"
                     ),
@@ -56,7 +58,7 @@ public class Application {
 
     private void usingMongoRepositoryAndBoolean(StudentRepository studentRepository, Student alex) {
         if (studentRepository.existsByEmail(alex.getEmail())) {
-            throw new IllegalStateException("Email already taken");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already taken");
         }
 
         studentRepository.insert(alex);
@@ -69,7 +71,7 @@ public class Application {
         List<Student> students = mongoTemplate.find(query, Student.class);
 
         if (students.size() > 1) {
-            throw new IllegalStateException("More than one student with email: " + alex.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "More than one student with email: " + alex.getEmail());
         }
 
         if (students.isEmpty()) {
