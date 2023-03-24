@@ -18,9 +18,10 @@ public class StudentService {
     }
 
     public void addNewStudent(Student student) {
-        studentRepository.findStudentByEmail(student.getEmail())
+        studentRepository.findByEmail(student.getEmail())
                 .ifPresentOrElse(s -> {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Email '" + s.getEmail() + "' already taken");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "Email '" + s.getEmail() + "' already taken");
                 }, () -> {
                     student.setCreated(LocalDateTime.now());
                     studentRepository.insert(student);

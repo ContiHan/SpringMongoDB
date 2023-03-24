@@ -43,7 +43,7 @@ public class Application {
                     LocalDateTime.now()
             );
 
-            studentRepository.findStudentByEmail(alex.getEmail())
+            studentRepository.findByEmail(alex.getEmail())
                     .ifPresentOrElse(student -> {
                         System.out.println(student + " already exists");
                     }, () -> {
