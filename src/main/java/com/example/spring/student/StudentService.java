@@ -1,11 +1,11 @@
 package com.example.spring.student;
 
+import com.example.spring.common.Helper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import org.yaml.snakeyaml.util.EnumUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -78,6 +78,26 @@ public class StudentService {
             studentFromDb.setLastName(student.getLastName());
         }
 
+        if (canBeUpdated(studentFromDb.getEmail(), student.getEmail())) {
+            studentFromDb.setEmail(student.getEmail());
+        }
+
+        if (canBeUpdated(studentFromDb.getGender(), student.getGender())) {
+            studentFromDb.setGender(student.getGender());
+        }
+
+        if (canBeUpdated(studentFromDb.getAddress(), student.getAddress())) {
+            studentFromDb.setAddress(student.getAddress());
+        }
+
+        if (canBeUpdated(studentFromDb.getFavouriteSubjects(), student.getFavouriteSubjects())) {
+            studentFromDb.setFavouriteSubjects(student.getFavouriteSubjects());
+        }
+
+        if (canBeUpdated(studentFromDb.getTotalSpentInBooks(), student.getTotalSpentInBooks())) {
+            studentFromDb.setTotalSpentInBooks(student.getTotalSpentInBooks());
+        }
+
         studentRepository.save(studentFromDb);
     }
 
@@ -89,6 +109,7 @@ public class StudentService {
 
     private boolean canBeUpdated(Gender originalValue, Gender newValue) {
         return newValue != null &&
+                Helper.isValueInEnum(newValue.toString(), Gender.class) &&
                 !Objects.equals(newValue, originalValue);
     }
 
@@ -97,5 +118,16 @@ public class StudentService {
                 canBeUpdated(originalValue.getCity(), newValue.getCity()) &&
                 canBeUpdated(originalValue.getCountry(), newValue.getCountry()) &&
                 canBeUpdated(originalValue.getPostCode(), newValue.getPostCode());
+    }
+
+    private boolean canBeUpdated(List<String> originalValue, List<String> newValue) {
+        return newValue != null &&
+                !newValue.isEmpty() &&
+                !Objects.equals(newValue, originalValue);
+    }
+
+    private boolean canBeUpdated(BigDecimal originalValue, BigDecimal newValue) {
+        return newValue != null &&
+                !Objects.equals(newValue, originalValue);
     }
 }
