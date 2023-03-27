@@ -4,6 +4,8 @@ import com.example.spring.student.Address;
 import com.example.spring.student.Gender;
 import com.example.spring.model.Student;
 import com.example.spring.student.StudentRepository;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +21,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootApplication
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Student registration",
+                version = "1.0.0",
+                description = "This project is only for learning purposes"
+        )
+)
 public class Application {
 
     public static void main(String[] args) {
