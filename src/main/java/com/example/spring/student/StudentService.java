@@ -1,6 +1,7 @@
 package com.example.spring.student;
 
 import com.example.spring.common.Helper;
+import com.example.spring.model.Student;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

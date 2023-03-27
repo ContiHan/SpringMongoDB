@@ -1,9 +1,10 @@
-package com.example.spring.student;
+package com.example.spring.controller;
 
+import com.example.spring.model.Student;
+import com.example.spring.student.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController

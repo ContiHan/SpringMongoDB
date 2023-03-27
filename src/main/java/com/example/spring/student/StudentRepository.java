@@ -1,5 +1,6 @@
 package com.example.spring.student;
 
+import com.example.spring.model.Student;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

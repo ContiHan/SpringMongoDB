@@ -2,7 +2,7 @@ package com.example.spring;
 
 import com.example.spring.student.Address;
 import com.example.spring.student.Gender;
-import com.example.spring.student.Student;
+import com.example.spring.model.Student;
 import com.example.spring.student.StudentRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

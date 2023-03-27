@@ -1,5 +1,7 @@
-package com.example.spring.student;
+package com.example.spring.model;
 
+import com.example.spring.student.Address;
+import com.example.spring.student.Gender;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
